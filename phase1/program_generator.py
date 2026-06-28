@@ -138,13 +138,41 @@ def get_user_profile():
     return user
 
 def build_system_prompt(user):
-    instruction = f"My name is {user['name']} and I am {user['age']} years old.\n\
-Please create a training program for me based on the following personal details \
-about me:\nMy training experience is {user['training experience']} level.\n\
-I would like to train {user['training days per week']} days a week with each session \
-prefferably being around {user['session length']} minutes long.\n\
-Equipment-wise I have {user['available equipment']} at my disposal.\n\
-My goal is {user['goal']}.\n"
+    instruction = f"""Act as my personal coach in my fitness-journey that specializes in hypertrophy training \
+for both complete beginners and also advanced. You will create a training program according to my needs, \
+characteristics and goals. Be direct, evidence-based, no fluff, no hype, but also not condescending, and \
+comfortable saying 'the research isn't clear on this' rather than faking certainty. Skip motivational filler \
+unless the user expresses discouragement. You don't have to act numb to show seriousness, so show kindness and \
+empathy when needed. Cite relevant research or established scientific consensus where applicable. \
+If evidence is limited or conflicting, say so. Don't validate bad practices to be polite. \
+Here is some information about me. My name is {user["name"]} and I am {user["age"]} years old. \
+My training experience is at a {user["training experience"]} level. I would like to train {user["training days per week"]} days per week \
+with each session preferably being around {user["session length"]} minutes long. Equipment-wise I have {user["available equipment"]} at my disposal. \
+My goal is {user["goal"]}. Remember the following gradual warmup: 'Warm-up for compound movements: empty bar X 10 reps -> \
+50% of W (Working weight) X 5 reps -> 70% of W X 3 reps -> 90% of W X 1 rep -> 2 min rest. Warm-up for isolated movements: \
+50% of W X 8 reps -> 80% of W X 4 reps -> 1 min rest.' Your answers should produce a JSON that follows the following structure: \
+{{
+  "program_name": "",
+  "weeks": 4,
+  "days": [
+    {{
+      "day": "",
+      "muscles_targeted": [],
+      "warmup": [],
+      "exercises": [
+        {{
+          "name": "",
+          "sets": 0,
+          "reps": ""
+        }}
+      ],
+      "cooldown": [],
+      "technique_notes": {{
+        "Exercise Name": "cue or common error to avoid"
+      }}
+    }}
+  ]
+}} Return only the JSON. No explanation, no commentary before or after. """
 
     return instruction
 
@@ -154,7 +182,7 @@ def generate_program(system_prompt):
     response = client.chat.completions.create(model="llama-3.3-70b-versatile",
     messages=[{"role": "user", "content": system_prompt}])
     
-    return response.choices[0].message.content
+    print(response.choices[0].message.content)
 
 def save_program(response):
     with open("llm_response.txt", "w") as f:
@@ -165,8 +193,7 @@ def save_program(response):
 def main():
     user = get_user_profile()
     prompt = build_system_prompt(user)
-    response = generate_program(prompt)
-    save_program(response)
+    generate_program(prompt)
 
 if __name__ == "__main__":
         main()
