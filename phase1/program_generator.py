@@ -1,3 +1,6 @@
+import os
+from groq import Groq
+
 def get_name():
     while True:
         name = input("Please enter your name: ")
@@ -134,9 +137,36 @@ def get_user_profile():
     
     return user
 
+def build_system_prompt(user):
+    instruction = f"My name is {user['name']} and I am {user['age']} years old.\n\
+Please create a training program for me based on the following personal details \
+about me:\nMy training experience is {user['training experience']} level.\n\
+I would like to train {user['training days per week']} days a week with each session \
+prefferably being around {user['session length']} minutes long.\n\
+Equipment-wise I have {user['available equipment']} at my disposal.\n\
+My goal is {user['goal']}.\n"
+
+    return instruction
+
+def generate_program(system_prompt):
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+    response = client.chat.completions.create(model="llama-3.3-70b-versatile",
+    messages=[{"role": "user", "content": system_prompt}])
+    
+    return response.choices[0].message.content
+
+def save_program(response):
+    with open("llm_response.txt", "w") as f:
+        f.write(response)
+
+
 
 def main():
-    print(get_user_profile())
+    user = get_user_profile()
+    prompt = build_system_prompt(user)
+    response = generate_program(prompt)
+    save_program(response)
 
 if __name__ == "__main__":
         main()
