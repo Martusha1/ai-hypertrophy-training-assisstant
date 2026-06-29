@@ -1,5 +1,6 @@
 import os
 from groq import Groq
+import json
 
 def get_name():
     while True:
@@ -156,9 +157,9 @@ My goal is {user["goal"]}. Remember the following gradual warmup: 'Warm-up for c
   "weeks": 4,
   "days": [
     {{
-      "day": "",
+      "day": integer from 1 to 7,
       "muscles_targeted": [],
-      "warmup": [],
+      "warmup": [i.e. list of plain strings],
       "exercises": [
         {{
           "name": "",
@@ -166,34 +167,71 @@ My goal is {user["goal"]}. Remember the following gradual warmup: 'Warm-up for c
           "reps": ""
         }}
       ],
-      "cooldown": [],
+      "cooldown": [i.e. list of plain strings],
       "technique_notes": {{
-        "Exercise Name": "cue or common error to avoid"
+        "exercise_name": "cue or common error to avoid"
       }}
     }}
   ]
-}} Return only the JSON. No explanation, no commentary before or after. """
+}} Return only the JSON. Ensure the JSON is valid and complete. Double-check all brackets and braces are closed." No explanation, no commentary before or after. """
 
     return instruction
 
 def generate_program(system_prompt):
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-    response = client.chat.completions.create(model="llama-3.3-70b-versatile",
+    response = client.chat.completions.create(model="llama-3.1-8b-instant",
     messages=[{"role": "user", "content": system_prompt}])
     
-    print(response.choices[0].message.content)
+    return response.choices[0].message.content
 
-def save_program(response):
+def save_program(p):
     with open("llm_response.txt", "w") as f:
-        f.write(response)
+        f.write(p)
+
+def parse_and_display_program(p):
+    try:
+        formatted_p = json.loads(p)
+    except ValueError:
+        print("JSON is probably faulty.")
+        return None
+    
+    print(formatted_p["program_name"])
+    print(f"Weeks: {formatted_p["weeks"]}")
+
+    for day in formatted_p["days"]: # loops only needed for lists
+        
+        print(f"Day: {day["day"]}")
+        
+        for muscle in day["muscles_targeted"]:
+            print(f"{muscle} ", end="")
+        
+        print("\nWarmup:")
+        for drill in day["warmup"]:
+            print(f"- {drill}")
+        
+        print("Exercises:")
+        for exercise in day["exercises"]:
+            print(f"{exercise["name"]}:")
+            print(f"{exercise["sets"]} sets X {exercise["reps"]} reps")
+
+        print("Cooldown")
+        for info in day["cooldown"]:
+            print(f"- {info}")
+        
+        print("Technique notes:")
+        for ex_name, cue  in day["technique_notes"].items():
+            print(f"- {ex_name}: {cue}")
+
+    return formatted_p
 
 
 
 def main():
     user = get_user_profile()
     prompt = build_system_prompt(user)
-    generate_program(prompt)
+    program = generate_program(prompt)
+    formatted_program = parse_and_display_program(program)
 
 if __name__ == "__main__":
         main()
