@@ -1,5 +1,36 @@
 import sqlite3
 
+def save_user(user):
+    conn = sqlite3.connect("hypertrophy.db")
+    # opens a connection to the database; if it doesn't exist,
+    # SQLite creates it
+    cursor = conn.cursor()
+    # runs SQL statements through the connection
+
+    cursor.execute("""
+        INSERT INTO users (name, age, training_experience,
+        training_days_per_week, session_length,
+        available_equipment, goal) VALUES (?,?,?,?,?,?,?)
+    """, (user["name"], user["age"], user["training experience"], user["training days per week"],
+    user["session length"],user["available equipment"], user["goal"]))
+
+    # sends SQL statements to DB through the cursor
+    # but doesn't save anything, it just queues them up
+
+    conn.commit()
+    # saves everything you've executed until now
+    conn.close()
+    # closes the connection
+
+    return cursor.lastrowid
+# gives back the ID that SQLite auto-generated after an INSERT
+
+def save_program(user_id, formatted_program):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+
+
 def init_db():
     conn = sqlite3.connect("hypertrophy.db")
     cursor = conn.cursor()
@@ -16,7 +47,7 @@ def init_db():
         goal TEXT,
         created_at DATE          
         );
- """)
+""")
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS program (
