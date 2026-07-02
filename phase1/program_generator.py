@@ -1,6 +1,7 @@
 import os
 from groq import Groq
 import json
+from phase2 import database
 
 def get_name():
     while True:
@@ -232,6 +233,8 @@ def main():
     prompt = build_system_prompt(user)
     program = generate_program(prompt)
     formatted_program = parse_and_display_program(program)
+    user_id = database.save_user(user)
+    program_id = database.save_program(user_id, formatted_program)
 
 if __name__ == "__main__":
         main()

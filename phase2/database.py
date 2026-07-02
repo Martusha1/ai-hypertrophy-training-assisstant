@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, json
 
 def save_user(user):
     conn = sqlite3.connect("hypertrophy.db")
@@ -29,6 +29,17 @@ def save_program(user_id, formatted_program):
     conn = sqlite3.connect("hypertrophy.db")
     cursor = conn.cursor()
 
+    raw_json = json.dumps(formatted_program)
+    
+    cursor.execute("""
+        INSERT INTO program (user_id, program_name,
+        weeks, raw_json) VALUES (?,?,?,?)
+    """, (user_id, formatted_program["program_name"], formatted_program["weeks"], raw_json))
+
+    conn.commit()
+    conn.close()
+
+    return cursor.lastrowid
 
 
 def init_db():
