@@ -1,7 +1,5 @@
-import os
+import os, json, database
 from groq import Groq
-import json
-from phase2 import database
 
 def get_name():
     while True:
