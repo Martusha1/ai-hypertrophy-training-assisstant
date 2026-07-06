@@ -54,6 +54,22 @@ def get_programs():
 
     return all_programs
     
+def get_program_day(program_id):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT raw_json from program
+    WHERE program_id = ?
+    """, (program_id,)) # , is needed because
+    # execute expects 2nd arg to be a tuple or list
+    
+    rj = cursor.fetchone()[0] # because the result need to be
+    # a tuple or list, we can also address which part of it we want
+    conn.close()
+
+    return json.loads(rj)
+
 
 def init_db():
     conn = sqlite3.connect("hypertrophy.db")
