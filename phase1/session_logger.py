@@ -25,10 +25,26 @@ def day_selection():
     p_id = show_programs()
     program = database.get_program_day(p_id)
 
+    all_days = []
+
     for day in program["days"]:
-        # print each day and muscles_targeted
-        # ask the user to pick a day number
-        # return the exercises list for that day
+        print(f"Day {day["day"]}:")
+        all_days.append(day["day"])
+        for muscle in day["muscles_targeted"]:
+            print(f"{muscle}")
+    
+    while True:
+        chosen_day = input("Please pick the number of the day of choice.")
+        if chosen_day.isdigit():
+            chosen_day = int(chosen_day)
+            if chosen_day in all_days:
+                for day in program["days"]:
+                    if day["day"] == chosen_day:
+                        return day["exercises"]
+            else:
+                print("The day you entered is invalid.")
+        else:
+            print("Please enter a digit.")
 
 
 def main():
