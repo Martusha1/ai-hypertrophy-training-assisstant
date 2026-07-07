@@ -22,8 +22,7 @@ def save_user(user):
     conn.close()
     # closes the connection
 
-    return cursor.lastrowid
-# gives back the ID that SQLite auto-generated after an INSERT
+    return cursor.lastrowid # gives back the ID that SQLite auto-generated after an INSERT
 
 def save_program(user_id, formatted_program):
     conn = sqlite3.connect("hypertrophy.db")
@@ -39,7 +38,7 @@ def save_program(user_id, formatted_program):
     conn.commit()
     conn.close()
 
-    return cursor.lastrowid
+    return cursor.lastrowid # returns program_id
 
 def get_programs():
     conn = sqlite3.connect("hypertrophy.db")
@@ -49,10 +48,10 @@ def get_programs():
         SELECT program_id, program_name FROM program
 """)
     
-    all_programs = cursor.fetchall()
+    all_programs = cursor.fetchall() # fetches multiple things
     conn.close()
 
-    return all_programs
+    return all_programs # returns a list of all programs
     
 def get_program_day(program_id):
     conn = sqlite3.connect("hypertrophy.db")
@@ -68,8 +67,21 @@ def get_program_day(program_id):
     # a tuple or list, we can also address which part of it we want
     conn.close()
 
-    return json.loads(rj)
+    return json.loads(rj) # return raw json of program details for certain day
 
+def log_session(program_id, user_id, day_number):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO workout_sessions(program_id, user_id, day_number)
+    VALUES (?,?,?)
+""", (program_id, user_id, day_number))
+    
+    conn.commit()
+    conn.close()
+
+    return cursor.lastrowid # return workout_id
 
 def init_db():
     conn = sqlite3.connect("hypertrophy.db")
