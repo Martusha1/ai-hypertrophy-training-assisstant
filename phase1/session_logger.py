@@ -46,6 +46,43 @@ def day_selection():
         else:
             print("Please enter a digit.")
 
+def log_sets(workout_id, exercises):
+    for ex in exercises:
+        exercise_name = ex["name"]
+        print(f"{ex["name"]}")
+        for s in range(1,ex["sets"]+1): # +1 because endpoint excluded
+            set_number = s
+            while True:
+                weight_kg = input(f"Weight for set {s}: ")
+                try:
+                    weight_kg = float(weight_kg)
+                    if 0.0 < weight_kg < 2845.0:
+                        break
+                    else:
+                        print("Please enter a valid weight in kg.")
+                except ValueError:
+                    print("Please use numbers.")
+            while True:
+                reps = input("Reps: ")
+                if reps.isdigit():
+                    reps = int(reps)
+                    if 0 < reps < 100:
+                        break
+                    else:
+                        print("Please enter a valid amount of reps")
+                else:
+                    print("Please use digits.")
+            while True:
+                rir = input("Reps in reserve: ")
+                if rir.isdigit():
+                    rir = int(rir)
+                    if 0 < rir < 100:
+                        break
+                    else:
+                        print("Please enter a valid amount of reps in reserve.")
+                else:
+                    print("Please use digits.")
+            database.save_set(workout_id,exercise_name,set_number,reps,weight_kg,rir)
 
 def main():
     show_programs()

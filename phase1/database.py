@@ -83,6 +83,23 @@ def log_session(program_id, user_id, day_number):
 
     return cursor.lastrowid # return workout_id
 
+def save_set(workout_id, exercise_name, set_number, reps_done, weight_kg, rir):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+    weight_lbs = weight_kg * 2.20462
+
+    cursor.execute("""
+    INSERT INTO logged_sets (workout_id, exercise_name,
+    set_number, reps_done, weight_kg, weight_lbs, rir)
+    VALUES (?,?,?,?,?,?,?)
+""",(workout_id, exercise_name, set_number, reps_done, weight_kg, weight_lbs, rir))
+    
+    conn.commit()
+    conn.close()
+
+    return cursor.lastrowid # return new set id
+
 def init_db():
     conn = sqlite3.connect("hypertrophy.db")
     cursor = conn.cursor()
