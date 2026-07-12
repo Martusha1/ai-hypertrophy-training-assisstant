@@ -40,7 +40,7 @@ def day_selection():
             if chosen_day in all_days:
                 for day in program["days"]:
                     if day["day"] == chosen_day:
-                        return p_id, day["exercises"]
+                        return chosen_day, p_id, day["exercises"]
             else:
                 print("The day you entered is invalid.")
         else:
@@ -84,12 +84,13 @@ def log_sets(workout_id, exercises):
                     print("Please use digits.")
             database.save_set(workout_id,exercise_name,set_number,reps,weight_kg,rir)
 
+
+
 def main():
-    program_id, exercises = day_selection() 
-    workout_id = database.log_session(program_id, program_generator.user_id, ) # think about how to add the day number
-    # that is supposed to come as 3rd arg here
-    logs = log_sets(workout_id, exercises) # log_sets contains save_set from
-    # database.py that transfers the data to database
+    chosen_day, program_id, exercises = day_selection()
+    user_id = database.get_user_id(program_id)
+    workout_id = database.log_session(program_id, user_id, chosen_day)
+    logs = log_sets(workout_id, exercises)
 
 if __name__ == "__main__":
     main()

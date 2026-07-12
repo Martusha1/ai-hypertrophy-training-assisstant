@@ -1,5 +1,20 @@
 import sqlite3, json
 
+def get_user_id(program_id):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT user_id FROM program
+    WHERE program_id = ?
+""", (program_id,))
+    
+    user_id = cursor.fetchone()[0]
+    
+    conn.close()
+
+    return user_id
+
 def save_user(user):
     conn = sqlite3.connect("hypertrophy.db")
     # opens a connection to the database; if it doesn't exist,
