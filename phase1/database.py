@@ -115,6 +115,35 @@ def save_set(workout_id, exercise_name, set_number, reps_done, weight_kg, rir):
 
     return cursor.lastrowid # return new set id
 
+def check_progress(exercise_name):
+    conn = sqlite3.connect("hypertrophy.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT workout_sessions.workout_id, logged_sets.exercise_name, logged_sets.set_number, logged_sets.reps_done, logged_sets.weight_kg, logged_sets.rir
+    FROM logged_sets
+    JOIN workout_sessions ON logged_sets.workout_id = workout_sessions.workout_id
+    WHERE logged_sets.exercise_name = ?
+    ORDER BY workout_sessions.session_date ASC
+""", (exercise_name, ))
+    
+    sessions = cursor.fetchall() # returns a tuple of tuples
+    
+    workout = {}
+    for w in sessions:
+        if w[0] not in workout:
+            workout[w[0]] = []
+        workout[w[0]].append(w[2:6])
+
+    # continue with comparison logic
+
+        
+
+
+        
+
+
+
 def init_db():
     conn = sqlite3.connect("hypertrophy.db")
     cursor = conn.cursor()
