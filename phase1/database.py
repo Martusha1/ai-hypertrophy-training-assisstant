@@ -129,14 +129,25 @@ def check_progress(exercise_name):
     
     sessions = cursor.fetchall() # returns a tuple of tuples
     
-    workout = {}
+    ex_history = {}
+    all_rir = []
+    all_weights = []
+    reps_per_set = []
     for w in sessions:
-        if w[0] not in workout:
-            workout[w[0]] = []
-        workout[w[0]].append(w[2:6])
+        if w[0] not in ex_history:
+            ex_history[w[0]] = []
+        ex_history[w[0]].append(w[2:6])
+        all_rir.append(w[5])
+        all_weights.append(w[4])
+        reps_per_set.append(w[3])
 
-    # continue with comparison logic
+    # workout dict approx. looks like this: {1:[1,5,100,1]}
 
+    # conditions for trueness of progressive overload:
+    # more weight, at least 4 reps per set
+    # same weight, more reps
+    # same weight , same reps, more rir
+    
         
 
 
