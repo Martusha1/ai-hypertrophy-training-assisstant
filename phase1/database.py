@@ -130,23 +130,69 @@ def check_progress(exercise_name):
     sessions = cursor.fetchall() # returns a tuple of tuples
     
     ex_history = {}
-    all_rir = []
-    all_weights = []
-    reps_per_set = []
     for w in sessions:
         if w[0] not in ex_history:
             ex_history[w[0]] = []
         ex_history[w[0]].append(w[2:6])
-        all_rir.append(w[5])
-        all_weights.append(w[4])
-        reps_per_set.append(w[3])
 
-    # ex_history dict approx. looks like this: {1:[(1,5,100,1)]}
+    # ex_history dict approx. looks like this
+    # {5: [(1, 5, 100, 1), (2, 4, 100, 1)],
+    # 6: [(1, 7, 100, 1), (2, 6, 100, 1)] }
+
+    ex_history_list = list(ex_history.values())
+
+    if len(ex_history_list) < 2:
+        return "Not enough sessions to determine if progress is achieved. Please have at least 2 logged sessions."
 
     # conditions for trueness of progressive overload:
     # top set must improve, maintain or have more rir
     # no set can drop by more than 3 reps compared to the same set last session
     # big weight drops (over 20%) need low rir to count, otherwise it's junk volume
+
+    current_session = ex_history_list[-1]
+    previous_session = ex_history_list[-2]
+
+    curr_top_set_reps = current_session[0][1]
+    curr_top_set_weight = current_session[0][2]
+    curr_top_set_rir = current_session[0][3]
+
+    prev_top_set_weight = previous_session[0][2]
+
+    if curr_top_set_weight >= prev_top_set_weight: # checking top set conditions
+        if curr_top_set_reps >= 5:
+            if curr_top_set_rir <= 2:
+                    for curr_output, prev_output in zip(current_session[1:], previous_session[1:]): # referring to all sets after 1st set by pairing them to check remaining conditions
+                        # pairs look approx. like this:
+                        # curr_output = (2, 7, 100.0, 1)
+                        # prev_output = (2, 5, 100.0, 1)
+
+                        curr_set_number = curr_output[0]
+                        curr_reps = curr_output[1]
+                        curr_weight = curr_output[2]
+                        curr_rir = curr_output[3]
+
+                        prev_reps = prev_output[1]
+                        prev_weight = prev_output[2]
+
+                        if curr_weight >= prev_weight - (1/5) * prev_weight:
+                            if curr_reps >= prev_reps - 3:
+                                if 0 <= curr_rir <= 2:
+                                    continue
+                                else:
+                                    return f"Too little effort on set {curr_set_number} - aim for RIR of 0-2 reps in order to achieve enough mechanical tension to stimulate muscle growth."
+                            else:
+                                return f"Reps too low on set {curr_set_number} - possible acute fatigue."
+                        else:
+                            return f"Junk volume on set {curr_set_number} - weight dropped too much. Aim for no more than 20% decrease of your working set weight."
+                    return "Progressive overload achieved!"
+            else:
+                return "Top set didn't improve. Your RIR is over 2, therefore you left too much in the tank. Try to go for more an effort that is 0 to 2 reps close to failure."
+        else:
+            return "Top set didn't improve. Your reps are far below the baseline. Choose a weight you can do 5-7 reps with for 0-2 reps close to failure."
+    else:
+        return "Top set didn't improve. You lifted less weight than last time. Choose a weight you can do 5-7 reps with for 0-2 reps close to failure."
+
+    
     
         
 
