@@ -141,12 +141,12 @@ def check_progress(exercise_name):
         all_weights.append(w[4])
         reps_per_set.append(w[3])
 
-    # workout dict approx. looks like this: {1:[1,5,100,1]}
+    # ex_history dict approx. looks like this: {1:[(1,5,100,1)]}
 
     # conditions for trueness of progressive overload:
-    # more weight, at least 4 reps per set
-    # same weight, more reps
-    # same weight , same reps, more rir
+    # top set must improve, maintain or have more rir
+    # no set can drop by more than 3 reps compared to the same set last session
+    # big weight drops (over 20%) need low rir to count, otherwise it's junk volume
     
         
 
