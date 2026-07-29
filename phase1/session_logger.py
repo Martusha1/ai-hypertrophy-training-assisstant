@@ -1,4 +1,4 @@
-import database, program_generator
+import database
 
 def show_programs():
     all_programs = database.get_programs()
@@ -91,6 +91,7 @@ def main():
     user_id = database.get_user_id(program_id)
     workout_id = database.log_session(program_id, user_id, chosen_day)
     logs = log_sets(workout_id, exercises)
+
 
 if __name__ == "__main__":
     main()

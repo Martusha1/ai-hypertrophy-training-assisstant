@@ -198,12 +198,6 @@ def check_progress(exercise_name):
     else:
         conn.close()
         return "Top set didn't improve. You lifted less weight than last time. Choose a weight you can do 5-7 reps with for 0-2 reps close to failure."
-    
-        
-
-
-        
-
 
 
 def init_db():
