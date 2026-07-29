@@ -179,20 +179,25 @@ def check_progress(exercise_name):
                                 if 0 <= curr_rir <= 2:
                                     continue
                                 else:
+                                    conn.close()
                                     return f"Too little effort on set {curr_set_number} - aim for RIR of 0-2 reps in order to achieve enough mechanical tension to stimulate muscle growth."
                             else:
+                                conn.close()
                                 return f"Reps too low on set {curr_set_number} - possible acute fatigue."
                         else:
+                            conn.close()
                             return f"Junk volume on set {curr_set_number} - weight dropped too much. Aim for no more than 20% decrease of your working set weight."
+                    conn.close()
                     return "Progressive overload achieved!"
             else:
+                conn.close()
                 return "Top set didn't improve. Your RIR is over 2, therefore you left too much in the tank. Try to go for more an effort that is 0 to 2 reps close to failure."
         else:
+            conn.close()
             return "Top set didn't improve. Your reps are far below the baseline. Choose a weight you can do 5-7 reps with for 0-2 reps close to failure."
     else:
+        conn.close()
         return "Top set didn't improve. You lifted less weight than last time. Choose a weight you can do 5-7 reps with for 0-2 reps close to failure."
-
-    
     
         
 
