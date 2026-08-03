@@ -87,10 +87,14 @@ def log_sets(workout_id, exercises):
 
 
 def main():
-    chosen_day, program_id, exercises = day_selection()
-    user_id = database.get_user_id(program_id)
-    workout_id = database.log_session(program_id, user_id, chosen_day)
-    logs = log_sets(workout_id, exercises)
+    print(database.check_progress("Squats"))
+    print(database.check_progress("Leg Press"))
+    print(database.check_progress("Lunges"))
+    print(database.check_progress("Leg Extensions"))
+    # chosen_day, program_id, exercises = day_selection()
+    # user_id = database.get_user_id(program_id)
+    # workout_id = database.log_session(program_id, user_id, chosen_day)
+    # logs = log_sets(workout_id, exercises)
 
 
 if __name__ == "__main__":

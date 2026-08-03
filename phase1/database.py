@@ -156,11 +156,14 @@ def check_progress(exercise_name):
     curr_top_set_weight = current_session[0][2]
     curr_top_set_rir = current_session[0][3]
 
+    prev_top_set_reps = previous_session[0][1]
     prev_top_set_weight = previous_session[0][2]
+    prev_top_set_rir = previous_session[0][3]
 
     if curr_top_set_weight >= prev_top_set_weight: # checking top set conditions
-        if curr_top_set_reps >= 5:
+        if curr_top_set_reps >= prev_top_set_reps:
             if curr_top_set_rir <= 2:
+                if curr_top_set_rir >= prev_top_set_rir:
                     for curr_output, prev_output in zip(current_session[1:], previous_session[1:]): # referring to all sets after 1st set by pairing them to check remaining conditions
                         # pairs look approx. like this:
                         # curr_output = (2, 7, 100.0, 1)
@@ -189,6 +192,8 @@ def check_progress(exercise_name):
                             return f"Junk volume on set {curr_set_number} - weight dropped too much. Aim for no more than 20% decrease of your working set weight."
                     conn.close()
                     return "Progressive overload achieved!"
+                else:
+                    return "Top set didn't improve. Your RIR got worse, thus it took more effort to lift the same volume you lifted last time."
             else:
                 conn.close()
                 return "Top set didn't improve. Your RIR is over 2, therefore you left too much in the tank. Try to go for more an effort that is 0 to 2 reps close to failure."
