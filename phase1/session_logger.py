@@ -76,7 +76,7 @@ def log_sets(workout_id, exercises):
                 rir = input("Reps in reserve: ")
                 if rir.isdigit():
                     rir = int(rir)
-                    if 0 < rir < 100:
+                    if 0 <= rir <= 10:
                         break
                     else:
                         print("Please enter a valid amount of reps in reserve.")
