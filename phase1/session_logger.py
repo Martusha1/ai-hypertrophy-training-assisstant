@@ -87,9 +87,13 @@ def log_sets(workout_id, exercises):
 
 
 def main():
+    print("Squats:")
     print(database.check_progress("Squats"))
+    print("Leg press:")
     print(database.check_progress("Leg Press"))
+    print("Lunges:")
     print(database.check_progress("Lunges"))
+    print("Leg extensions:")
     print(database.check_progress("Leg Extensions"))
     # chosen_day, program_id, exercises = day_selection()
     # user_id = database.get_user_id(program_id)
