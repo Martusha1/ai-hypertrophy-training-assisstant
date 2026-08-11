@@ -161,7 +161,7 @@ def check_progress(exercise_name):
     prev_top_set_rir = previous_session[0][3]
 
     if curr_top_set_weight >= prev_top_set_weight: # checking valid top set conditions
-        if curr_top_set_reps >= prev_top_set_reps:
+        if curr_top_set_reps >= 4:
             if curr_top_set_rir <= 2:
                 if curr_top_set_rir >= prev_top_set_rir:
                     if curr_top_set_weight > prev_top_set_weight: # checking if top set
@@ -279,7 +279,7 @@ def check_progress(exercise_name):
                 return "Top set didn't improve. Your RIR is over 2 - you left too much in the tank. Go for 0 to 2 reps close to failure."
         else:
             conn.close()
-            return "Top set didn't improve. You did less reps than last time. Go lighter."
+            return "Rep count too low. You possibly picked a weight too heavy for you."
     else:
         conn.close()
         return "Top set didn't improve. You lifted less weight than last time. Go lighter."
