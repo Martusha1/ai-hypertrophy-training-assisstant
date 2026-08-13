@@ -1,7 +1,9 @@
 import sqlite3, json
+import os
+DB_PATH = os.path.join(os.path.dirname(__file__), "hypertrophy.db")
 
 def get_user_id(program_id):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -16,7 +18,7 @@ def get_user_id(program_id):
     return user_id
 
 def save_user(user):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     # opens a connection to the database; if it doesn't exist,
     # SQLite creates it
     cursor = conn.cursor()
@@ -40,7 +42,7 @@ def save_user(user):
     return cursor.lastrowid # gives back the ID that SQLite auto-generated after an INSERT
 
 def save_program(user_id, formatted_program):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     raw_json = json.dumps(formatted_program)
@@ -56,7 +58,7 @@ def save_program(user_id, formatted_program):
     return cursor.lastrowid # returns program_id
 
 def get_programs():
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -69,7 +71,7 @@ def get_programs():
     return all_programs # returns a list of all programs
     
 def get_program_day(program_id):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -85,7 +87,7 @@ def get_program_day(program_id):
     return json.loads(rj) # return raw json of program details for certain day
 
 def log_session(program_id, user_id, day_number):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -99,7 +101,7 @@ def log_session(program_id, user_id, day_number):
     return cursor.lastrowid # return workout_id
 
 def save_set(workout_id, exercise_name, set_number, reps_done, weight_kg, rir):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     weight_lbs = weight_kg * 2.20462
@@ -116,7 +118,7 @@ def save_set(workout_id, exercise_name, set_number, reps_done, weight_kg, rir):
     return cursor.lastrowid # return new set id
 
 def check_progress(exercise_name):
-    conn = sqlite3.connect("hypertrophy.db")
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
