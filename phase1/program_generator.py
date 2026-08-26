@@ -1,6 +1,11 @@
 import os, json, database
 from groq import Groq
 
+from dotenv import load_dotenv
+
+load_dotenv()
+groq_key = os.getenv("GROQ_API_KEY")
+
 def get_name():
     while True:
         name = input("Please enter your name: ")
@@ -177,7 +182,7 @@ My goal is {user["goal"]}. Remember the following gradual warmup: 'Warm-up for c
     return instruction
 
 def generate_program(system_prompt):
-    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    client = Groq(api_key=os.environ.get(groq_key))
 
     response = client.chat.completions.create(model="llama-3.1-8b-instant",
     messages=[{"role": "user", "content": system_prompt}])
